@@ -33,6 +33,13 @@ fun InfoScreen (modifier: Modifier = Modifier, navController: NavController) {
 
         Text("Student 2:", style = MaterialTheme.typography.bodyLarge)
         Text("Maher", style = MaterialTheme.typography.headlineMedium)
+<<<<<<< HEAD
+=======
+
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+>>>>>>> ebec794873f31d531e4cc45a13c346ad65d4db40
     }
 
 }

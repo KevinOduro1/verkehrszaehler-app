@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.thkoeln.vma.trafficcounter.viewmodel.TrafficViewModel
+<<<<<<< HEAD
 
 
 @Composable
@@ -38,6 +39,38 @@ fun CounterScreen(trafficViewModel: TrafficViewModel, navController: NavControll
 
 
 
+=======
+
+@Composable
+fun CounterScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    trafficViewModel: TrafficViewModel
+) {
+    val footTraffic = trafficViewModel.footTraffic
+    val cyclingTraffic = trafficViewModel.cyclingTraffic
+    val totalTraffic = trafficViewModel.totalTraffic
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Gesamtverkehr: ${totalTraffic.value}",
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.background)
+                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                    .padding(8.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+>>>>>>> ebec794873f31d531e4cc45a13c346ad65d4db40
 
 
         Column(
@@ -63,6 +96,7 @@ fun CounterScreen(trafficViewModel: TrafficViewModel, navController: NavControll
 
             Row(
                 modifier = Modifier
+<<<<<<< HEAD
                     .fillMaxWidth()
 
             ) {
@@ -140,6 +174,57 @@ fun CounterScreen(trafficViewModel: TrafficViewModel, navController: NavControll
                         color = Color.Black
                     )
                 }
+=======
+                    .weight(1f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.background)
+                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                    .padding(8.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = "Fahrradfahrer: ${cyclingTraffic.value}",
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.background)
+                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                    .padding(8.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { trafficViewModel.resetCounts() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Reset")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Button(
+                onClick = { trafficViewModel.incrementFootTraffic() },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Fußgänger")
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Button(
+                onClick = { trafficViewModel.incrementCyclingTraffic() },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Fahrradfahrer")
+>>>>>>> ebec794873f31d531e4cc45a13c346ad65d4db40
             }
 
 
@@ -162,8 +247,13 @@ fun CounterScreen(trafficViewModel: TrafficViewModel, navController: NavControll
 
         }
 
+<<<<<<< HEAD
 
 
 
 
+=======
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+>>>>>>> ebec794873f31d531e4cc45a13c346ad65d4db40
 }
