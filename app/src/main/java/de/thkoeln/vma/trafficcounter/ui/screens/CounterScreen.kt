@@ -27,33 +27,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import de.thkoeln.vma.trafficcounter.viewmodel.TrafficViewModel
 
 @Composable
-fun CounterScreen(modifier: Modifier = Modifier, navController: NavController) {
-    val footTraffic = remember { mutableStateOf(0) } // Fußgänger-Zähler
-    val cyclingTraffic = remember { mutableStateOf(0) } // Fahrrad-Zähler
-    val totalTraffic = remember { mutableStateOf(0) } // Gesamt-Zähler
+fun CounterScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    trafficViewModel: TrafficViewModel
+) {
+    val footTraffic = trafficViewModel.footTraffic
+    val cyclingTraffic = trafficViewModel.cyclingTraffic
+    val totalTraffic = trafficViewModel.totalTraffic
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Gesamtverkehr: ${totalTraffic.value}",
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.background)
+                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                    .padding(8.dp)
+            )
+        }
 
-       Row (modifier = Modifier.fillMaxWidth()){
-           Text(
-               text = "Gesamtverkehr:${totalTraffic.value}",
-               textAlign = TextAlign.Center,
-               modifier = Modifier
-                   .fillMaxWidth()
-                   .clip(RoundedCornerShape(8.dp))
-                   .background(MaterialTheme.colorScheme.background)
-                   .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-                   .padding(8.dp)
-           )
-
-       }
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Row(
             modifier = Modifier
@@ -65,7 +69,6 @@ fun CounterScreen(modifier: Modifier = Modifier, navController: NavController) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .background(MaterialTheme.colorScheme.background)
                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
@@ -77,7 +80,6 @@ fun CounterScreen(modifier: Modifier = Modifier, navController: NavController) {
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .background(MaterialTheme.colorScheme.background)
                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
@@ -85,83 +87,39 @@ fun CounterScreen(modifier: Modifier = Modifier, navController: NavController) {
             )
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = {
-                footTraffic.value = 0
-                cyclingTraffic.value = 0
-                totalTraffic.value = 0
-            },
+            onClick = { trafficViewModel.resetCounts() },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Reset")
         }
 
-
         Spacer(modifier = Modifier.height(8.dp))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
             Button(
-                onClick = {
-                    footTraffic.value += 1
-                    totalTraffic.value += 1
-                },
-                modifier = Modifier.weight(1f) // Der Button nimmt 1/2 des verfügbaren Platzes ein
+                onClick = { trafficViewModel.incrementFootTraffic() },
+                modifier = Modifier.weight(1f)
             ) {
                 Text("Fußgänger")
             }
+
             Spacer(modifier = Modifier.width(8.dp))
+
             Button(
-                onClick = {
-                    cyclingTraffic.value += 1
-                    totalTraffic.value += 1
-                },
-                modifier = Modifier.weight(1f) // Der Button nimmt 1/2 des verfügbaren Platzes ein
+                onClick = { trafficViewModel.incrementCyclingTraffic() },
+                modifier = Modifier.weight(1f)
             ) {
                 Text("Fahrradfahrer")
             }
         }
 
-
         Spacer(modifier = Modifier.height(8.dp))
-
-        // Reset-Button
-
-
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Button(
-                onClick = {
-                    navController.navigate("listScreen")
-                },
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)  // Positioniert den Button am rechten Rand
-                    .padding(16.dp)  // Optional, um zusätzlichen Abstand zu geben
-            ) {
-                Text("Zur Liste")
-            }
-        }
-
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Button(onClick = {
-            navController.navigate("InfoScreen")
-        }) {
-            Text("InfoScreen")
-        }
-
     }
-
-
 }

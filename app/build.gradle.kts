@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "de.thkoeln.vma.trafficcounter"
         minSdk = 26
-        targetSdk = 26
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
