@@ -84,9 +84,3 @@ class MainActivity : ComponentActivity() {
 
     }
 }
-
-// Bildschirm für Verkehrszählung
-
-
-// Vorschau für Entwicklungszwecke
-
