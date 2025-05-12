@@ -19,27 +19,20 @@ import de.thkoeln.vma.trafficcounter.SampleData
 
 @Composable
 fun InfoScreen (modifier: Modifier = Modifier, navController: NavController) {
-    val traffics = SampleData.trafficSample // Beispieldaten laden
+    val traffics = SampleData.trafficSample
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        Text("Student 1:", style = MaterialTheme.typography.bodyLarge)
         Text("Kevin", style = MaterialTheme.typography.headlineMedium)
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
+        Text("Student 2:", style = MaterialTheme.typography.bodyLarge)
         Text("Maher", style = MaterialTheme.typography.headlineMedium)
-
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Zurück zur Zählseite
-        Button(onClick = {
-            navController.navigate("CounterScreen")
-        }) {
-            Text("Zur CounterScreen")
-        }
     }
+
 }

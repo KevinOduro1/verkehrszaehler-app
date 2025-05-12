@@ -8,20 +8,34 @@ import androidx.compose.foundation.layout.*
 
 
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+
+
 
 import androidx.navigation.compose.*
+
 import de.thkoeln.vma.trafficcounter.ui.theme.TrafficCounterTheme
 import de.thkoeln.vma.trafficcounter.ui.screens.CounterScreen
 import de.thkoeln.vma.trafficcounter.ui.screens.InfoScreen
 import de.thkoeln.vma.trafficcounter.ui.screens.ListScreen
+import de.thkoeln.vma.trafficcounter.ui.components.TrafficBottomNavigationBar
+import de.thkoeln.vma.trafficcounter.ui.components.TrafficTopAppBar
+
+
+
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+
+import de.thkoeln.vma.trafficcounter.viewmodel.TrafficViewModel
+
 
 
 // Haupt-Activity der App
 class MainActivity : ComponentActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge() // aktiviert Edge-to-Edge Anzeige
@@ -29,14 +43,28 @@ class MainActivity : ComponentActivity() {
             TrafficCounterTheme {
                 val navController = rememberNavController() // Navigation Controller merken
 
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                // Holen des ViewModels
+                val trafficViewModel: TrafficViewModel = viewModel(
+                    factory = TrafficViewModel.TrafficViewModelFactory()
+                )
+
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = { TrafficBottomNavigationBar(navController) },
+                    topBar = { TrafficTopAppBar(navController = navController) }
+                ) { innerPadding ->
                     NavHost(
                         navController = navController, // Navigation-Host setzen
                         startDestination = "counterScreen" // Startziel der Navigation
                     ) {
-                        // Composables als Navigationsziele
+
                         composable("counterScreen") {
-                            CounterScreen(modifier = Modifier.padding(innerPadding), navController = navController)
+                            // Übergabe des trafficViewModel an CounterScreen
+                            CounterScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                navController = navController,
+                                trafficViewModel = trafficViewModel // Hier wird das ViewModel übergeben
+                            )
                         }
                         composable("listScreen") {
                             ListScreen(modifier = Modifier.padding(innerPadding), navController = navController)
@@ -46,11 +74,14 @@ class MainActivity : ComponentActivity() {
                             InfoScreen(modifier = Modifier.padding(innerPadding), navController = navController)
                         }
 
-
+                        composable("TrafficBottomNavigationBar") {
+                            TrafficBottomNavigationBar(navController = navController)
+                        }
                     }
                 }
             }
         }
+
     }
 }
 
@@ -58,10 +89,4 @@ class MainActivity : ComponentActivity() {
 
 
 // Vorschau für Entwicklungszwecke
-@Preview(showBackground = true)
-@Composable
-fun CounterScreenPreview() {
-    TrafficCounterTheme {
-        CounterScreen(modifier = Modifier.padding(16.dp), navController = rememberNavController())
-    }
-}
+

@@ -41,12 +41,7 @@ fun ListScreen(modifier: Modifier = Modifier, navController: NavController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Zurück zur Zählseite
-        Button(onClick = {
-            navController.navigate("counterScreen")
-        }) {
-            Text("Zur Zählseite")
-        }
+
     }
 }
 

@@ -41,10 +41,11 @@ android {
 
 dependencies {
 
+    implementation(libs.generativeai)
     // Wird ab Aufgabenblatt 1 benötigt für die Navigation, also den NavController und den NavHost
     val nav_version = "2.8.6"
     implementation("androidx.navigation:navigation-compose:$nav_version")
-
+    implementation ("androidx.compose.material:material:1.0.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
