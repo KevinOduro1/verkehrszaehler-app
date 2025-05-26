@@ -3,10 +3,8 @@ package de.thkoeln.vma.trafficcounter.ui.components
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert

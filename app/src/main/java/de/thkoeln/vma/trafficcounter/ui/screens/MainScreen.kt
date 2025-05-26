@@ -1,6 +1,4 @@
 package de.thkoeln.vma.trafficcounter.ui.screens
-
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -12,10 +10,8 @@ import androidx.navigation.compose.*
 import de.thkoeln.vma.trafficcounter.ui.components.CleanDatabaseDialog
 import de.thkoeln.vma.trafficcounter.ui.components.TrafficBottomNavigationBar
 import de.thkoeln.vma.trafficcounter.ui.components.TrafficTopAppBar
-import de.thkoeln.vma.trafficcounter.ui.screens.CounterScreen
-import de.thkoeln.vma.trafficcounter.ui.screens.InfoScreen
-import de.thkoeln.vma.trafficcounter.ui.screens.ListScreen
 import de.thkoeln.vma.trafficcounter.viewmodel.TrafficViewModel
+
 
 @Composable
 fun MainScreen() {

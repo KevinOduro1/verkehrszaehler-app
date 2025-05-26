@@ -1,6 +1,5 @@
 package de.thkoeln.vma.trafficcounter.ui.components
 
-
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.thkoeln.vma.trafficcounter.SampleData
 
-
 @Composable
 fun InfoScreen (modifier: Modifier = Modifier, navController: NavController) {
     val traffics = SampleData.trafficSample
