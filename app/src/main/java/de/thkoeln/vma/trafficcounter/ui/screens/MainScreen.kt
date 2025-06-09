@@ -5,8 +5,11 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.*
+import de.thkoeln.vma.trafficcounter.model.data.database.TrafficDatabase
+import de.thkoeln.vma.trafficcounter.repository.TrafficRepository
 import de.thkoeln.vma.trafficcounter.ui.components.CleanDatabaseDialog
 import de.thkoeln.vma.trafficcounter.ui.components.TrafficBottomNavigationBar
 import de.thkoeln.vma.trafficcounter.ui.components.TrafficTopAppBar
@@ -14,10 +17,13 @@ import de.thkoeln.vma.trafficcounter.viewmodel.TrafficViewModel
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(trafficViewModel: TrafficViewModel) {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    val db = TrafficDatabase.getDatabase(context)
+    val repository = TrafficRepository(db.trafficDao())
     val trafficViewModel: TrafficViewModel = viewModel(
-        factory = TrafficViewModel.TrafficViewModelFactory()
+        factory = TrafficViewModel.TrafficViewModelFactory(repository)
     )
 
     var showDialog by remember { mutableStateOf(false) }
@@ -26,7 +32,7 @@ fun MainScreen() {
         showDialog = showDialog,
         onDismissRequest = { showDialog = false },
         onConfirmation = {
-            trafficViewModel.resetCounters()
+            trafficViewModel.deleteAllTraffic()
             showDialog = false
         },
         dialogTitle = "DB löschen?",
@@ -54,8 +60,10 @@ fun MainScreen() {
             composable("listScreen") {
                 ListScreen(
                     modifier = Modifier.padding(innerPadding),
-                    navController = navController
+                    navController = navController,
+                    trafficViewModel = trafficViewModel
                 )
+
             }
             composable("InfoScreen") {
                 InfoScreen(

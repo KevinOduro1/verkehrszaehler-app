@@ -5,7 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -13,15 +13,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import de.thkoeln.vma.trafficcounter.model.data.entities.Traffic
+import de.thkoeln.vma.trafficcounter.model.data.entities.Traffic.TrafficType
 import de.thkoeln.vma.trafficcounter.viewmodel.TrafficViewModel
+import java.time.LocalDateTime
 
 @Composable
 fun CounterScreen(
     trafficViewModel: TrafficViewModel,
     navController: NavController,
-    onResetClicked: () -> Unit, // <-- neu
+    onResetClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Live-Zählwerte aus DB (Flows) sammeln
+    val totalCount by trafficViewModel.totalTrafficCount.collectAsState(initial = 0)
+    val footCount by trafficViewModel.footTrafficCount.collectAsState(initial = 0)
+    val cyclingCount by trafficViewModel.cyclingTrafficCount.collectAsState(initial = 0)
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -29,7 +37,7 @@ fun CounterScreen(
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "Gesamtverkehr: ${trafficViewModel.totalTraffic}",
+                text = "Gesamtverkehr: $totalCount",
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -44,11 +52,10 @@ fun CounterScreen(
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "Fußgänger: ${trafficViewModel.footTraffic}",
+                text = "Fußgänger: $footCount",
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .background(MaterialTheme.colorScheme.background)
                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
@@ -56,11 +63,10 @@ fun CounterScreen(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = "Fahrradfahrer: ${trafficViewModel.cyclingTraffic}",
+                text = "Fahrradfahrer: $cyclingCount",
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth()
                     .clip(RoundedCornerShape(8.dp))
                     .background(MaterialTheme.colorScheme.background)
                     .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
@@ -71,7 +77,7 @@ fun CounterScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { onResetClicked() }, // <-- statt direkt resetCounters()
+            onClick = onResetClicked,
             colors = ButtonDefaults.buttonColors(Color.Gray),
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -82,7 +88,15 @@ fun CounterScreen(
 
         Row(modifier = Modifier.fillMaxWidth()) {
             Button(
-                onClick = { trafficViewModel.increaseFootTraffic() },
+                onClick = {
+                    trafficViewModel.insertTraffic(
+                        Traffic(
+                            trafficType = TrafficType.FOOT,
+                            date = LocalDateTime.now(),
+                            note = "Zählung Fußgänger"
+                        )
+                    )
+                },
                 colors = ButtonDefaults.buttonColors(Color.Cyan),
                 modifier = Modifier.weight(1f)
             ) {
@@ -90,7 +104,15 @@ fun CounterScreen(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Button(
-                onClick = { trafficViewModel.increaseCyclingTraffic() },
+                onClick = {
+                    trafficViewModel.insertTraffic(
+                        Traffic(
+                            trafficType = TrafficType.CYCLING,
+                            date = LocalDateTime.now(),
+                            note = "Zählung Fahrrad"
+                        )
+                    )
+                },
                 colors = ButtonDefaults.buttonColors(Color.Cyan),
                 modifier = Modifier.weight(1f)
             ) {

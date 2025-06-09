@@ -1,50 +1,41 @@
 package de.thkoeln.vma.trafficcounter.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import de.thkoeln.vma.trafficcounter.model.data.entities.Traffic
+import de.thkoeln.vma.trafficcounter.repository.TrafficRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import androidx.annotation.WorkerThread
 
+class TrafficViewModel(private val repository: TrafficRepository) : ViewModel() {
 
-class TrafficViewModel : ViewModel() {
+    // Flow-Listen
+    val totalTraffic: Flow<List<Traffic>> = repository.totalTraffic
+    val footTraffic: Flow<List<Traffic>> = repository.footTraffic
+    val cyclingTraffic: Flow<List<Traffic>> = repository.cyclingTraffic
 
+    // 🟢 Zähler-Flows
+    val totalTrafficCount: Flow<Int> = repository.totalTrafficCount
+    val footTrafficCount: Flow<Int> = repository.footTrafficCount
+    val cyclingTrafficCount: Flow<Int> = repository.cyclingTrafficCount
 
+    // Methoden für DB-Operationen
+    @WorkerThread
+    fun insertTraffic(traffic: Traffic) = viewModelScope.launch {
+        repository.insertTraffic(traffic)
+    }
 
+    @WorkerThread
+    fun deleteAllTraffic() = viewModelScope.launch {
+        repository.deleteAllTraffic()
+    }
 
-
-        var footTraffic by mutableStateOf(0)
-        var cyclingTraffic by mutableStateOf(0)
-        var totalTraffic by mutableStateOf(0)
-
-        // Methode zum Zurücksetzen der Zähler
-        fun resetCounters() {
-            footTraffic = 0
-            cyclingTraffic = 0
-            totalTraffic = 0
-        }
-
-        // Methode zum Erhöhen des Fußgängerverkehrs
-        fun increaseFootTraffic() {
-            footTraffic += 1
-            totalTraffic += 1
-        }
-
-        // Methode zum Erhöhen des Fahrradverkehrs
-        fun increaseCyclingTraffic() {
-            cyclingTraffic += 1
-            totalTraffic += 1
-        }
-
-
-
-
-        // Brauchen Sie erst bei einer Live-Aufgabe (Pflicht), bei der Sie unsere Unterstützung bekommen
-        class TrafficViewModelFactory() : ViewModelProvider.Factory {
+    // Factory-Klasse
+    class TrafficViewModelFactory(private val repository: TrafficRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(TrafficViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return TrafficViewModel() as T
+                return TrafficViewModel(repository) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
